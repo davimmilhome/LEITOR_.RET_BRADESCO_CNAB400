@@ -1,0 +1,6 @@
+#Ignore all csv and txt files generate by the tool
+.csv
+.txt
+
+#ignore .env setup files
+.env
