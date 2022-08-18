@@ -7,10 +7,11 @@ ret_file_path = ''
 def getfile():
     global ret_file, ret_file_path
 
+
     ret_file = input("Digite o caminho do arquivo: \n")
     ret_file_path =  os.path.join(ret_file)
-    return ret_file_path
 
+    return ret_file_path
 
 if __name__ == '__main__':
     getfile()
