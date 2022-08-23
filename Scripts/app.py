@@ -1,4 +1,7 @@
-#Script that reads the .ret file
+"""Script que lê efetivamento o .RET
+Observe que os métodos para ler os registros está dif
+dos métodos para ler trailler (pode ser replicado para o header.
+"""
 import pandas as pd
 
 import Methods.get_file as gf
@@ -70,8 +73,6 @@ def dt_ocorrencia():
     df_dt_ocorrencia = pd.DataFrame(
         ls_dt_ocorrencia, columns=['dt_ocorrencia'])
 
-
-
 def valor_pago():
     global df_valor_pago
 
@@ -101,8 +102,6 @@ def ocorrencia():
 
     df_ocorrencia = pd.DataFrame(ls_ocorrencia, columns=['ocorrencia'])
 
-
-
 def motivo():
     global df_motivo
 
@@ -116,7 +115,6 @@ def motivo():
             ls_motivo.append(element)
 
     df_motivo = pd.DataFrame(ls_motivo, columns=['motivo'])
-
 
 def file_fitter():
     global df_final
@@ -189,7 +187,7 @@ def trailler_fitter():
     trailler_reader('valor_registrado_(02)', 62, 74, money='on')
     trailler_reader('qtde_liquidado_(06)', 86, 91, money='off')
     trailler_reader('valor_liquidado_(06)', 74, 86, money='on')
-    ## NECESSÁRIO SOMAR VALOR LIQUIDADO TOTAL DE OUTRAS OCORRENCIAS COMO A 17
+    #NECESSÁRIO SOMAR VALOR LIQUIDADO TOTAL DE OUTRAS OCORRENCIAS ex:17
     trailler_reader('qtde_baixa_(09e10)', 103, 108, money='off')
     trailler_reader('valor_baixado_(09e10)', 108, 120, money='on')
 
@@ -209,7 +207,6 @@ if __name__ == '__main__':
 
     file_fitter()
     out_resume()
-    aviso_bancario()
     trailler_fitter()
     out_trailler()
 
