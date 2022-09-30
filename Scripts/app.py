@@ -8,15 +8,29 @@ import Methods.get_file as gf
 from Methods.get_file import ret_file_path
 
 def file_reader():
+
+
     global ret_file1
-
-
     ret_file1 = open(gf.getfile(),'r')
 
+def conta():
+
+
+    global df_conta
+    ls_conta = []
+    with open(gf.ret_file_path, 'r') as ret_file1:
+
+        for i in ret_file1.readlines()[1:-1]:
+        # [1:] -> Indica que iremos ignorar  cabeçalho na leitura
+            element = i[32:37]
+            ls_conta.append(element)
+
+    df_conta = pd.DataFrame(ls_conta, columns=['conta'])
+
 def nosso_numero():
+
+
     global df_nosso_numero
-
-
     ls_nosso_numero = []
     with open(gf.ret_file_path, 'r') as ret_file1:
 
@@ -28,9 +42,9 @@ def nosso_numero():
     df_nosso_numero = pd.DataFrame(ls_nosso_numero, columns=['nosso_numero'])
 
 def valor_titulo():
+
+
     global df_valor_titulo
-
-
     ls_valor_titulo = []
     with open(gf.ret_file_path, 'r') as ret_file1:
 
@@ -43,9 +57,9 @@ def valor_titulo():
     df_valor_titulo = df_valor_titulo.apply(pd.to_numeric, errors='coerce')
 
 def dt_vencimento():
+
+
     global df_dt_vencimento
-
-
     ls_dt_vencimento = []
     with open(gf.ret_file_path, 'r') as ret_file1:
 
@@ -73,6 +87,20 @@ def dt_ocorrencia():
     df_dt_ocorrencia = pd.DataFrame(
         ls_dt_ocorrencia, columns=['dt_ocorrencia'])
 
+def dt_credito():
+
+
+    global df_dt_credito
+    ls_dt_credito = []
+    with open(gf.ret_file_path, 'r') as ret_file1:
+
+        for i in ret_file1.readlines()[1:-1]:  # IGNORANDO HEADER E TRAILLER
+
+            element = i[295:297]+'/'+i[297:299]+'/'+i[299:301]
+            ls_dt_credito.append(element)
+
+    df_dt_credito = pd.DataFrame(ls_dt_credito, columns=['dt_credito'])
+
 def valor_pago():
     global df_valor_pago
 
@@ -89,9 +117,9 @@ def valor_pago():
     df_valor_pago = df_valor_pago.apply(pd.to_numeric, errors='coerce')
 
 def ocorrencia():
+
+
     global df_ocorrencia
-
-
     ls_ocorrencia = []
     with open(gf.ret_file_path, 'r') as ret_file1:
 
@@ -103,9 +131,9 @@ def ocorrencia():
     df_ocorrencia = pd.DataFrame(ls_ocorrencia, columns=['ocorrencia'])
 
 def motivo():
+
+
     global df_motivo
-
-
     ls_motivo = []
     with open(gf.ret_file_path, 'r') as ret_file1:
 
@@ -117,24 +145,30 @@ def motivo():
     df_motivo = pd.DataFrame(ls_motivo, columns=['motivo'])
 
 def file_fitter():
+
+
     global df_final
-
-
     file_reader()
+
+    conta()
     nosso_numero()
     # seu_numero()
     dt_vencimento()
     valor_titulo()
     dt_ocorrencia()
+    dt_credito()
     valor_pago()
     ocorrencia()
     motivo()
 
-    df_final = df_nosso_numero
+    df_final = pd.DataFrame()
+    df_final["conta"] = df_conta
+    df_final["nosso_numero"] = df_nosso_numero
     # df_final["seu_numero"] = df_seu_numero
     df_final["dt_vencimento"] = df_dt_vencimento
     df_final["valor_titulo"] = df_valor_titulo
     df_final["dt_ocorrencia"] = df_dt_ocorrencia
+    df_final["dt_credito"] = df_dt_credito
     df_final["valor_pago"] = df_valor_pago
     df_final["ocorrencia"] = df_ocorrencia
     df_final["motivo"] = df_motivo
@@ -161,8 +195,8 @@ def out_resume():
 trailler_variables_dict = {}
 def trailler_reader(x, y,z, money):
 
-    global trailler_variables_dict
 
+    global trailler_variables_dict
     with open(gf.ret_file_path, 'r') as ret_file1:
 
         if money == 'on':
@@ -182,6 +216,7 @@ def trailler_reader(x, y,z, money):
 #Isso acontece pois fille_fitter invoca file_reader
 
 def trailler_fitter():
+
 
     trailler_reader('qtde_registros_(02)', 57, 62, money='off')
     trailler_reader('valor_registrado_(02)', 62, 74, money='on')
