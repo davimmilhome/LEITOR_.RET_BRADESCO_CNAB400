@@ -11,7 +11,9 @@ As informações vão para dentro da Scripts em dois arquivos, resume[todas as t
 
 O arquivo getfile.py tem que ser adaptado a sua maneira de capturar o arquivo retorno.
 
-Sei que ainda tenho muito a melhorar.
+Sei que ainda tenho muito a melhorar. Principalmente relacionado ao escopo global utilizado nas variáveis, aprendi que isso não é indicado pois pode causar confusão na hora de enxergar onde uma variável está atuando. Esse módulo é feito para ser utilizado de maneira independente. Porém, pretendo corrigir e melhorar isso no futuro. 
+
+Abraços.
 
 
 
