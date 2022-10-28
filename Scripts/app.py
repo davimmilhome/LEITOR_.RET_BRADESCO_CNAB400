@@ -8,11 +8,14 @@ import Methods.get_file as gf
 from Methods.get_file import ret_file_path
 
 def file_reader():
-
+    """Função objetiva, pegar o arquivo a ser lido"""
 
     global ret_file1
     ret_file1 = open(gf.getfile(),'r')
 
+"""O grupo de funções abaixo tem o objetivo de ler campos
+específicos do arquivo. O nome da função corresponde ao campolido.
+"""
 def conta():
 
 
@@ -145,11 +148,12 @@ def motivo():
     df_motivo = pd.DataFrame(ls_motivo, columns=['motivo'])
 
 def file_fitter():
-
-
+    """Essa função formata o arquivo resume_csv.
+    É possível desativar alguma leitura específica caso seja necessario
+    Caso você adicione um campo a mais de leitura, será necessário
+    somar o novo método aos que seguem abaixo"""
     global df_final
     file_reader()
-
     conta()
     nosso_numero()
     # seu_numero()
@@ -160,7 +164,7 @@ def file_fitter():
     valor_pago()
     ocorrencia()
     motivo()
-
+    #formatando DF
     df_final = pd.DataFrame()
     df_final["conta"] = df_conta
     df_final["nosso_numero"] = df_nosso_numero
@@ -172,10 +176,9 @@ def file_fitter():
     df_final["valor_pago"] = df_valor_pago
     df_final["ocorrencia"] = df_ocorrencia
     df_final["motivo"] = df_motivo
-
     print(df_final)
-
 def out_resume():
+    """Método somente para inputar o arquivo no diretório"""
 
     df_final.to_csv(
         './resume_csv.csv',
@@ -194,13 +197,16 @@ def out_resume():
 
 trailler_variables_dict = {}
 def trailler_reader(x, y,z, money):
-
-
+    """Método abaixo serve para ler a última linha do arquivo,
+    'trailler'. Toma como argumento a localização do início e
+    fim do campo e se o campo é monetário,
+    depende da fille_fitter(), fille_fitter() deve ser invocada antes
+    Isso acontece pois fille_fitter invoca file_reader"""
     global trailler_variables_dict
     with open(gf.ret_file_path, 'r') as ret_file1:
 
         if money == 'on':
-
+            #Adiciona o separador as casas decimais
             for i in ret_file1.readlines()[-1:]:
 
                 value = i[y:z-2]+"."+i[z-2:z]
@@ -212,12 +218,9 @@ def trailler_reader(x, y,z, money):
                 value = i[y:z]
                 trailler_variables_dict.update({x:value})
 
-#depende da fille_fitter(), fille_fitter() deve ser invocada antes
-#Isso acontece pois fille_fitter invoca file_reader
-
 def trailler_fitter():
-
-
+    """Função de apoio que utiliza trailler_reader especificando
+    os campos que se deseja"""
     trailler_reader('qtde_registros_(02)', 57, 62, money='off')
     trailler_reader('valor_registrado_(02)', 62, 74, money='on')
     trailler_reader('qtde_liquidado_(06)', 86, 91, money='off')
@@ -227,7 +230,7 @@ def trailler_fitter():
     trailler_reader('valor_baixado_(09e10)', 108, 120, money='on')
 
 def out_trailler():
-
+    """Escrita e saída do trailler no diretório"""
 
     trailler_file = open("./trailler.txt",'w')
     trailler_file.write("Leitura do Trailler, ultima linha do arquivo:\n")
@@ -239,7 +242,8 @@ def out_trailler():
     trailler_file.close()
 
 if __name__ == '__main__':
-
+    #junta todas as funções para leitura completa e
+    # compartimentalizada do arquivo
     file_fitter()
     out_resume()
     trailler_fitter()
