@@ -1,17 +1,40 @@
 """Script que lê efetivamento o .RET
-Observe que os métodos para ler os registros está dif
-dos métodos para ler trailler (pode ser replicado para o header.
+Observe que os métodos para ler os registros está diferente
+dos métodos para ler trailler (pode ser replicado para o header).
+
+Basicamente esse módulo funciona captando o arquivo e em seguida
+fazendo vários for-loops em cada campo para formatar o CSV de
+saída e, por último, lê a útlima linha do arquivo. As funções são
+executadas dentro do próprio móudlo utilizando o dundler main.
+
+Para mais informações entre em contato com Davi Milhome
 """
 import pandas as pd
 
 import Methods.get_file as gf
 from Methods.get_file import ret_file_path
 
+#GLOBALS
+ret_file1 = ''
+df_conta = ''
+df_nosso_numero = ''
+df_valor_titulo = ''
+df_dt_vencimento = ''
+df_dt_ocorrencia = ''
+df_dt_credito = ''
+df_valor_pago = ''
+df_ocorrencia = ''
+df_motivo = ''
+df_final = ''
+trailler_variables_dict = ''
+
+
 def file_reader():
     """Função objetiva, pegar o arquivo a ser lido"""
 
     global ret_file1
     ret_file1 = open(gf.getfile(),'r')
+
 
 """O grupo de funções abaixo tem o objetivo de ler campos
 específicos do arquivo. O nome da função corresponde ao campolido.
@@ -91,23 +114,24 @@ def dt_ocorrencia():
         ls_dt_ocorrencia, columns=['dt_ocorrencia'])
 
 def dt_credito():
-
+    """ A data crédito é filtrada, só é imputada caso
+    haja valor pago"""
 
     global df_dt_credito
     ls_dt_credito = []
     with open(gf.ret_file_path, 'r') as ret_file1:
 
         for i in ret_file1.readlines()[1:-1]:  # IGNORANDO HEADER E TRAILLER
-
-            element = i[295:297]+'/'+i[297:299]+'/'+i[299:301]
-            ls_dt_credito.append(element)
+            if int(i[254:266]) != 0: #SE O VALOR PAGO FOR DIFERENTE DE ZERO
+                element = i[295:297]+'/'+i[297:299]+'/'+i[299:301]
+                ls_dt_credito.append(element)
 
     df_dt_credito = pd.DataFrame(ls_dt_credito, columns=['dt_credito'])
 
 def valor_pago():
+
+
     global df_valor_pago
-
-
     ls_valor_pago = []
     with open(gf.ret_file_path, 'r') as ret_file1:
 
@@ -151,12 +175,12 @@ def file_fitter():
     """Essa função formata o arquivo resume_csv.
     É possível desativar alguma leitura específica caso seja necessario
     Caso você adicione um campo a mais de leitura, será necessário
-    somar o novo método aos que seguem abaixo"""
+    adiconar o novo método aos que seguem abaixo"""
     global df_final
+
     file_reader()
     conta()
     nosso_numero()
-    # seu_numero()
     dt_vencimento()
     valor_titulo()
     dt_ocorrencia()
@@ -164,11 +188,11 @@ def file_fitter():
     valor_pago()
     ocorrencia()
     motivo()
+
     #formatando DF
     df_final = pd.DataFrame()
     df_final["conta"] = df_conta
     df_final["nosso_numero"] = df_nosso_numero
-    # df_final["seu_numero"] = df_seu_numero
     df_final["dt_vencimento"] = df_dt_vencimento
     df_final["valor_titulo"] = df_valor_titulo
     df_final["dt_ocorrencia"] = df_dt_ocorrencia

@@ -1,5 +1,9 @@
 
-Esse Script tem a inteção de ler arquivos de retorno  bradesco (.RET) CNAB 400 para obter um detalhamento das transações contidas.
+Esse Script tem a inteção de ler arquivos de retorno  Bradesco (.RET) CNAB 400 
+para obter um detalhamento das transações contidas. De maneira semelhante ao 
+que acontece nos sites: 
+https://wspf.banco.bradesco/wsValidadorUniversal/validadorgeral
+https://wspf.bradesco.com.br/wsValidadorTeleBanco/ValidadorRemessa.aspx
 
 Feito especificamente para o retorno tipo 1.
 
