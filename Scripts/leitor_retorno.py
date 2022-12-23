@@ -125,6 +125,9 @@ def dt_credito():
             if int(i[254:266]) != 0: #SE O VALOR PAGO FOR DIFERENTE DE ZERO
                 element = i[295:297]+'/'+i[297:299]+'/'+i[299:301]
                 ls_dt_credito.append(element)
+            else: # se não for diferente de zero
+                element = ""
+                ls_dt_credito.append(element)
 
     df_dt_credito = pd.DataFrame(ls_dt_credito, columns=['dt_credito'])
 
