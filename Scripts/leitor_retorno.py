@@ -1,13 +1,15 @@
-"""Script que lê efetivamento o .RET
+"""Script que principal, lê o arquivo .RET do Bradesco.
+
+Primeiramente, busca o arquivo no móudlo Methods.get_file.
+O módulo Methods.get_file deve ser adaptado em uma implementação para captar
+o arquivo.
 Observe que os métodos para ler os registros está diferente
 dos métodos para ler trailler (pode ser replicado para o header).
-
 Basicamente esse módulo funciona captando o arquivo e em seguida
 fazendo vários for-loops em cada campo para formatar o CSV de
 saída e, por último, lê a útlima linha do arquivo. As funções são
 executadas dentro do próprio móudlo utilizando o dundler main.
-
-Para mais informações entre em contato com Davi Milhome
+Para mais informações entre em contato com Davi Milhome.
 """
 import pandas as pd
 
@@ -30,18 +32,17 @@ trailler_variables_dict = ''
 
 
 def file_reader():
-    """Função objetiva, pegar o arquivo a ser lido"""
-
+    """Pega o arquivo a ser lido."""
     global ret_file1
     ret_file1 = open(gf.getfile(),'r')
 
 
-"""O grupo de funções abaixo tem o objetivo de ler campos
-específicos do arquivo. O nome da função corresponde ao campolido.
-"""
+#
+#Esse grupo de funções tem o objetivo de ler campos específicos do arquivo
+# O nome da função corresponde ao campo lido.
+
 def conta():
-
-
+    """Lê o campo conta, inputa no df_conta."""
     global df_conta
     ls_conta = []
     with open(gf.ret_file_path, 'r') as ret_file1:
@@ -54,8 +55,7 @@ def conta():
     df_conta = pd.DataFrame(ls_conta, columns=['conta'])
 
 def nosso_numero():
-
-
+    """Lê o campo nosso numero, inputa no df_nosso_numero."""
     global df_nosso_numero
     ls_nosso_numero = []
     with open(gf.ret_file_path, 'r') as ret_file1:
@@ -68,8 +68,7 @@ def nosso_numero():
     df_nosso_numero = pd.DataFrame(ls_nosso_numero, columns=['nosso_numero'])
 
 def valor_titulo():
-
-
+    """Lê o campo valor título, inputa no df_valor_titulo."""
     global df_valor_titulo
     ls_valor_titulo = []
     with open(gf.ret_file_path, 'r') as ret_file1:
@@ -83,8 +82,7 @@ def valor_titulo():
     df_valor_titulo = df_valor_titulo.apply(pd.to_numeric, errors='coerce')
 
 def dt_vencimento():
-
-
+    """Lê o campo dt_vencimento,inputa no df_dt_vencimento."""
     global df_dt_vencimento
     ls_dt_vencimento = []
     with open(gf.ret_file_path, 'r') as ret_file1:
@@ -99,9 +97,8 @@ def dt_vencimento():
         columns=['dt_vencimento'])
 
 def dt_ocorrencia():
+    """Lê o campo dt_ocorrencia, inputa no df_dt_ocorrencia."""
     global df_dt_ocorrencia
-
-
     ls_dt_ocorrencia = []
     with open(gf.ret_file_path, 'r') as ret_file1:
 
@@ -114,9 +111,9 @@ def dt_ocorrencia():
         ls_dt_ocorrencia, columns=['dt_ocorrencia'])
 
 def dt_credito():
-    """ A data crédito é filtrada, só é imputada caso
-    haja valor pago"""
+    """Lê o campo dt_credito, inputa no df_dt_credito.
 
+    O input só é feito se valor pago <> 0"""
     global df_dt_credito
     ls_dt_credito = []
     with open(gf.ret_file_path, 'r') as ret_file1:
@@ -132,8 +129,10 @@ def dt_credito():
     df_dt_credito = pd.DataFrame(ls_dt_credito, columns=['dt_credito'])
 
 def valor_pago():
+    """Lê o campo df_valor_pago, inputa no df_valor_pago.
 
-
+    Faz a separação com ponto dos centavos.
+    Transforma o df data em float."""
     global df_valor_pago
     ls_valor_pago = []
     with open(gf.ret_file_path, 'r') as ret_file1:
@@ -147,8 +146,7 @@ def valor_pago():
     df_valor_pago = df_valor_pago.apply(pd.to_numeric, errors='coerce')
 
 def ocorrencia():
-
-
+    """Lê o campo ocorrencia, inputa no df_ocorrencia."""
     global df_ocorrencia
     ls_ocorrencia = []
     with open(gf.ret_file_path, 'r') as ret_file1:
@@ -161,8 +159,7 @@ def ocorrencia():
     df_ocorrencia = pd.DataFrame(ls_ocorrencia, columns=['ocorrencia'])
 
 def motivo():
-
-
+    """Lê o campo motivo, inputa no df_motivo."""
     global df_motivo
     ls_motivo = []
     with open(gf.ret_file_path, 'r') as ret_file1:
@@ -175,7 +172,10 @@ def motivo():
     df_motivo = pd.DataFrame(ls_motivo, columns=['motivo'])
 
 def file_fitter():
-    """Essa função formata o arquivo resume_csv.
+    """Invoca as funções para ciração dos dfs e formata o arquivo resume_csv.
+
+    Invoca as funções para a criação dos DFS.
+    Utiliza os dfs definidos acima para juntar em um único csv.
     É possível desativar alguma leitura específica caso seja necessario
     Caso você adicione um campo a mais de leitura, será necessário
     adiconar o novo método aos que seguem abaixo"""
@@ -205,8 +205,7 @@ def file_fitter():
     df_final["motivo"] = df_motivo
     print(df_final)
 def out_resume():
-    """Método somente para inputar o arquivo no diretório"""
-
+    """Saída do aruqivo csv do"""
     df_final.to_csv(
         './resume_csv.csv',
         header = True ,
@@ -224,11 +223,16 @@ def out_resume():
 
 trailler_variables_dict = {}
 def trailler_reader(x, y,z, money):
-    """Método abaixo serve para ler a última linha do arquivo,
-    'trailler'. Toma como argumento a localização do início e
-    fim do campo e se o campo é monetário,
-    depende da fille_fitter(), fille_fitter() deve ser invocada antes
-    Isso acontece pois fille_fitter invoca file_reader"""
+    """Lê a última linha do arquivo, inputa no dict trailler_variables_dict
+
+    Argumentos:
+    x -- Nome do campo inserido no dicionário
+    y -- campo de ínicio da leitura
+    z --  campo de termino da leitura
+    money -- verifica se campo monetário para adicionar a separação(money=on).
+    Depende da fille_fitter(), fille_fitter() deve ser invocada antes
+    Isso acontece pois fille_fitter invoca file_reader.
+    """
     global trailler_variables_dict
     with open(gf.ret_file_path, 'r') as ret_file1:
 
@@ -246,8 +250,7 @@ def trailler_reader(x, y,z, money):
                 trailler_variables_dict.update({x:value})
 
 def trailler_fitter():
-    """Função de apoio que utiliza trailler_reader especificando
-    os campos que se deseja"""
+    """Utiliza trailler_reader especificandoos campos que se deseja."""
     trailler_reader('qtde_registros_(02)', 57, 62, money='off')
     trailler_reader('valor_registrado_(02)', 62, 74, money='on')
     trailler_reader('qtde_liquidado_(06)', 86, 91, money='off')
@@ -257,8 +260,10 @@ def trailler_fitter():
     trailler_reader('valor_baixado_(09e10)', 108, 120, money='on')
 
 def out_trailler():
-    """Escrita e saída do trailler no diretório"""
+    """Escrita do trailler_dict no trailler.txt, saida do txt.
 
+    Escreve as infomações contidas no dicionário do trailler num arquivo txt.
+    """
     trailler_file = open("./trailler.txt",'w')
     trailler_file.write("Leitura do Trailler, ultima linha do arquivo:\n")
 
@@ -269,8 +274,10 @@ def out_trailler():
     trailler_file.close()
 
 if __name__ == '__main__':
-    #junta todas as funções para leitura completa e
-    # compartimentalizada do arquivo
+    """Executa as funções em ordem quando o script é inicializado.
+    
+    A ordem é importante.
+    """
     file_fitter()
     out_resume()
     trailler_fitter()
